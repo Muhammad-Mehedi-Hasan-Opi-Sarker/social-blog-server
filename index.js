@@ -49,6 +49,30 @@ async function run() {
             res.send(post);
         })
 
+        // delete for data 
+        app.delete('/post/:id', async (req, res) => {
+            const id = req.params.id;
+            const post = { _id: ObjectId(id) };
+            const result = await socialCollection.deleteOne(post);
+            res.send(result);
+        })
+
+        // update data 
+        app.put('/post/:id', async (req, res) => {
+            const update = req.body;
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    title: update?.title,
+                    post: update?.post
+                }
+            }
+            const result = await socialCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        })
+
 
 
         // -------------
@@ -93,26 +117,25 @@ async function run() {
         })
 
         // profile edit 
-           app.put('/profile/:email', async (req, res) => {
-               const email = req.params.email;
-               console.log(email)
-               const user = req.body;
-               console.log(user)
-               const filter = { email: email };
-               const options = { upsert: true };
-               const updateDoc = {
-                   $set: user,
-               };
-               const result = await profileCollection.updateOne(filter, updateDoc, options)
-               res.send(result);
-           })
-           app.get('/profile', async(req,res)=>{
-               const email = req.query.email;
-               const query = {email:email};
-               const result = await profileCollection.find(query).toArray()
-               res.send(result);
-           })
-
+        app.put('/profile/:email', async (req, res) => {
+            const email = req.params.email;
+            console.log(email)
+            const user = req.body;
+            console.log(user)
+            const filter = { email: email };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: user,
+            };
+            const result = await profileCollection.updateOne(filter, updateDoc, options)
+            res.send(result);
+        })
+        app.get('/profile', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await profileCollection.find(query).toArray()
+            res.send(result);
+        })
 
     }
     finally {
