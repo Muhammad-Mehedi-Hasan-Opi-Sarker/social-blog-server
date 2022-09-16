@@ -110,6 +110,20 @@ async function run() {
             const result = await commentCollection.deleteOne(query);
             res.send(result);
         })
+        app.put('/comment/:id', async (req, res) => {
+            const update = req.body;
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    comment: update?.comment,
+                    
+                }
+            }
+            const result = await commentCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        })
 
         // user for data 
         app.put('/user/:email', async (req, res) => {
