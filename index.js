@@ -90,6 +90,8 @@ async function run() {
             const result = await likeCollection.updateOne(filter, updateDoc, options);
             res.send(result);
         }) */
+
+
         // comment 
         app.post('/comment', async (req, res) => {
             const comment = req.body;
@@ -101,6 +103,12 @@ async function run() {
             const query = { id: id };
             const result = await commentCollection.find(query).toArray();
             res.send(result)
+        })
+        app.delete('/comment/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await commentCollection.deleteOne(query);
+            res.send(result);
         })
 
         // user for data 
